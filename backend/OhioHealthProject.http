@@ -1,0 +1,6 @@
+@OhioHealthProject_HostAddress = http://localhost:5085
+
+GET {{OhioHealthProject_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

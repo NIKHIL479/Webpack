@@ -5,7 +5,7 @@ const isProduction = process.env.NODE_ENV === "production";
 
 module.exports = {
   mode: isProduction ? "production" : "development",
-  entry: "./src/main.jsx",
+  entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "../backend/ohiohealth/wwwroot/build"),
     filename: "bundle.js",

@@ -7,7 +7,7 @@ module.exports = {
   mode: isProduction ? "production" : "development",
   entry: "./src/main.jsx",
   output: {
-    path: path.resolve(__dirname, "../backend/wwwroot/build"),
+    path: path.resolve(__dirname, "../backend/ohiohealth/wwwroot/build"),
     filename: "bundle.js",
     clean: true, // removes old files
   },

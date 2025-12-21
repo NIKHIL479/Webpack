@@ -5,7 +5,7 @@
 
 # dotenv files
 .env
-wwwroot/build
+build
 bin/
 obj/
 *.user
@@ -13,7 +13,8 @@ obj/
 *.db
 appsettings.Development.json
 
-/wwwroot/lib    # if these are generated
+
+
 
 
 # User-specific files

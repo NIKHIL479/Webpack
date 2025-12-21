@@ -1,13 +1,15 @@
-
 const path = require("path");
 
+// Determine mode from environment variable
+const isProduction = process.env.NODE_ENV === "production";
+
 module.exports = {
-  mode: "production",
+  mode: isProduction ? "production" : "development",
   entry: "./src/main.jsx",
   output: {
-    path: path.resolve(__dirname, "../backend/wwwroot/dist"),
+    path: path.resolve(__dirname, "../backend/wwwroot/build"),
     filename: "bundle.js",
-    clean: true,
+    clean: true, // removes old files
   },
   module: {
     rules: [
@@ -22,7 +24,7 @@ module.exports = {
         },
       },
       {
-        test: /\.css$/,
+        test: /\.css$/i,
         use: ["style-loader", "css-loader"],
       },
     ],
@@ -30,4 +32,5 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx"],
   },
+  devtool: isProduction ? false : "source-map", // source maps only in dev
 };

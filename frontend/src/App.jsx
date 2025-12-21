@@ -1,7 +1,9 @@
-import Form from './Form';
+import React from 'react'
 
-function App() {
-  return <div><h1>OhioHealth User's Form Page</h1><Form /></div>;
+export const App = () => {
+  return (
+    <div>Hello World</div>
+  )
 }
 
 export default App;

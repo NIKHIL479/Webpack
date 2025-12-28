@@ -9,14 +9,13 @@
 
 <div id="react-root"></div>
 
-<script src="~/build/bundle.js"></script>
-
-
+@section Scripts {
 <script>
  const container = document.getElementById('react-root');
-const root = window.ReactDOM.createRoot(container);
-root.render(window.React.createElement(window.App));
+ const root = window.ReactDOM.createRoot(container);
+ root.render(window.React.createElement(window.App));
 </script>
+}
 
 
 

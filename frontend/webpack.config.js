@@ -1,4 +1,5 @@
 const path = require("path");
+const AssetsPlugin = require('assets-webpack-plugin');
 
 // Determine mode from environment variable
 const isProduction = process.env.NODE_ENV === "production";
@@ -31,4 +32,12 @@ module.exports = {
     extensions: [".js", ".jsx"],
   },
   devtool: isProduction ? false : "source-map", // source maps only in dev
+  plugins: [
+    new AssetsPlugin({
+      path: path.resolve(__dirname, "../backend/OhioHealth/wwwroot/build"),
+      filename: 'assets.json',
+      prettyPrint: true,
+      update: true
+    })
+  ],
 };

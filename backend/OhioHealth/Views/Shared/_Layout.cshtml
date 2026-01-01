@@ -5,36 +5,40 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OhioHealth</title>
-
 </head>
-<body>
 
+<body>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
-@{
-    var assetsPath = System.IO.Path.Combine(
-        Directory.GetCurrentDirectory(),
-        "wwwroot",
-        "build",
-        "assets.json"
-    );
-
-    var assets = System.IO.File.Exists(assetsPath)
-        ? System.Text.Json.JsonDocument.Parse(System.IO.File.ReadAllText(assetsPath))
-        : null;
-
-    var bundleJs = assets?.RootElement
-        .GetProperty("main")
-        .GetProperty("js")
-        .GetString() ?? "/build/bundle.js";
-}
-
-            <script src="@bundleJs"></script>
         </main>
     </div>
 
-   
+    @{
+        var assetsPath = System.IO.Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "wwwroot",
+            "build",
+            "assets.json"
+        );
+
+        string bundleJs = "/build/bundle.js";
+
+        if (System.IO.File.Exists(assetsPath))
+        {
+            var assets = System.Text.Json.JsonDocument.Parse(
+                System.IO.File.ReadAllText(assetsPath)
+            );
+
+            bundleJs = assets.RootElement
+                .GetProperty("index")
+                .GetProperty("js")
+                .GetString();
+        }
+    }
+
+    <script src="@bundleJs"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

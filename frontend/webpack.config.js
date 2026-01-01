@@ -9,7 +9,7 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "../backend/ohiohealth/wwwroot/build"),
-    filename: "bundle.js",
+    filename: "bundle.[contenthash].js",
     clean: true, // removes old files
   },
   module: {

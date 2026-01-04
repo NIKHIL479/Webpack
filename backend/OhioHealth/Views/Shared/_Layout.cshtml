@@ -30,7 +30,7 @@
                 System.IO.File.ReadAllText(assetsPath)
             );
 
-            bundleJs = assets.RootElement
+            bundleJs = assets.RootElement 
                 .GetProperty("index")
                 .GetProperty("js")
                 .GetString();

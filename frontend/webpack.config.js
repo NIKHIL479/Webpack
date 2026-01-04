@@ -1,43 +1,32 @@
 const path = require("path");
-const AssetsPlugin = require('assets-webpack-plugin');
 
-// Determine mode from environment variable
+// Check if we are in production mode
 const isProduction = process.env.NODE_ENV === "production";
 
-module.exports = {
-  mode: isProduction ? "production" : "development",
-  entry: "./src/index.js",
-  output: {
-    path: path.resolve(__dirname, "../backend/ohiohealth/wwwroot/build"),
-    filename: "bundle.[contenthash].js",
-    clean: true, // removes old files
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        
-        },
-      },
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
-      },
-    ],
-  },
-  resolve: {
-    extensions: [".js", ".jsx"],
-  },
-  devtool: isProduction ? false : "source-map", // source maps only in dev
-  plugins: [
-    new AssetsPlugin({
+module.exports = async () => {
+  const { WebpackManifestPlugin } = await import('webpack-manifest-plugin');
+
+  return {
+    mode: isProduction ? "production" : "development",
+    entry: "./src/index.js",
+    output: {
       path: path.resolve(__dirname, "../backend/OhioHealth/wwwroot/build"),
-      filename: 'assets.json',
-      prettyPrint: true,
-      update: true
-    })
-  ],
+      filename: "bundle.[contenthash].js",
+      clean: true, // clears old files before build
+    },
+    module: {
+      rules: [
+        { test: /\.(js|jsx)$/, exclude: /node_modules/, use: "babel-loader" },
+        { test: /\.css$/i, use: ["style-loader", "css-loader"] },
+      ],
+    },
+    resolve: { extensions: [".js", ".jsx"] },
+    devtool: isProduction ? false : "source-map",
+    plugins: [
+      new WebpackManifestPlugin({
+        fileName: "assets.json",
+        publicPath: "/build/", // optional, prefix for asset paths
+      }),
+    ],
+  };
 };

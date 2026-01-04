@@ -1,4 +1,16 @@
 ﻿@using System.IO
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Environment
+
+@{
+    var assetsBundleFile=System.IO.Path.Combine(Environment.WebRootPath,"build/assets.json");
+    if(File.Exists(assetsBundleFile))
+    {
+      
+    }
+}
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,9 +19,12 @@
     <title>@ViewData["Title"] - OhioHealth</title>
 </head>
 
+
+
 <body>
     <div class="container">
         <main role="main" class="pb-3">
+            <h1>text from layout.cshtml</h1>
             @RenderBody()
         </main>
     </div>
@@ -19,7 +34,7 @@
             Directory.GetCurrentDirectory(),
             "wwwroot",
             "build",
-            "assets.json"
+            "assets.json" 
         );
 
         string bundleJs = "/build/bundle.js";

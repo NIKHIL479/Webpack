@@ -1,58 +1,35 @@
 ﻿@using System.IO
+@using Newtonsoft.Json //download Newtonsoft.Json via NuGet
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Environment
 
 @{
-    var assetsBundleFile=System.IO.Path.Combine(Environment.WebRootPath,"build/assets.json");
-    if(File.Exists(assetsBundleFile))
+    var assetsBundleFile = System.IO.Path.Combine(Environment.WebRootPath, "build/assets.json");
+    string bundleJS = "";
+    if (File.Exists(assetsBundleFile))
     {
-      
+        var bundleNamesJson = File.ReadAllText(assetsBundleFile);
+        dynamic bundleAssetHelpers = JsonConvert.DeserializeObject(bundleNamesJson);
+        bundleJS = bundleAssetHelpers.main; // "main" matches your webpack entry
     }
 }
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OhioHealth</title>
+       @* Render the JS bundle *@
+    <script src="@bundleJS"></script>
 </head>
-
-
-
 <body>
     <div class="container">
         <main role="main" class="pb-3">
-            <h1>text from layout.cshtml</h1>
+            <h1>Text from layout.cshtml</h1>
             @RenderBody()
         </main>
     </div>
 
-    @{
-        var assetsPath = System.IO.Path.Combine(
-            Directory.GetCurrentDirectory(),
-            "wwwroot",
-            "build",
-            "assets.json" 
-        );
-
-        string bundleJs = "/build/bundle.js";
-
-        if (System.IO.File.Exists(assetsPath))
-        {
-            var assets = System.Text.Json.JsonDocument.Parse(
-                System.IO.File.ReadAllText(assetsPath)
-            );
-
-            bundleJs = assets.RootElement 
-                .GetProperty("index")
-                .GetProperty("js")
-                .GetString();
-        }
-    }
-
-    <script src="@bundleJs"></script>
+ 
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

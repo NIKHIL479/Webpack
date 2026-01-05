@@ -23,9 +23,19 @@ module.exports = async () => {
     resolve: { extensions: [".js", ".jsx"] },
     devtool: isProduction ? false : "source-map",
     plugins: [
-      new WebpackManifestPlugin({
+       new WebpackManifestPlugin({
         fileName: "assets.json",
-        publicPath: "/build/", // optional, prefix for asset paths
+        publicPath: "/build/",
+        filter: (file) => !file.path.endsWith(".map"), // skip .map files
+        generate: (seed, files) => {
+          const manifest = {};
+          files.forEach(file => {
+            // remove extension from key
+            const nameWithoutExt = path.basename(file.name, path.extname(file.name));
+            manifest[nameWithoutExt] = file.path;
+          });
+          return manifest;
+        }
       }),
     ],
   };

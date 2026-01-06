@@ -1,6 +1,18 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
+﻿
+@{
+    ViewData["Title"] = "View";
 }
-<h1>@ViewData["Title"]</h1>
+
+<h1> Privacy View</h1>
 
 <p>Use this page to detail your site's privacy policy.</p>
+
+<div id="react-root"></div>
+
+@section Scripts {
+    <script>
+        const container = document.getElementById('react-root');
+        const root = window.ReactDOM.createRoot(container);
+        root.render(window.React.createElement(window.Privacy));
+    </script>
+}

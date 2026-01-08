@@ -30,7 +30,16 @@ module.exports = async () => {
         },
       ],
     },
-    resolve: { extensions: [".js", ".jsx"] },
+
+    resolve: {
+  extensions: [".js", ".jsx"],
+ alias: {
+    react: "preact/compat",
+    "react-dom": "preact/compat",
+    "react-dom/client": "preact/compat",
+    "react/jsx-runtime": "preact/jsx-runtime",
+  },
+},
     devtool: isProduction ? false : "source-map",
     optimization: {
       splitChunks: {
@@ -49,6 +58,8 @@ module.exports = async () => {
         name: "runtime",
       },
     },
+
+    
     plugins: [
       new MiniCssExtractPlugin({
         filename: "[name].[contenthash].css", // separate CSS file

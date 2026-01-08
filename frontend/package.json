@@ -102,6 +102,7 @@
     "path-key": "^3.1.1",
     "picocolors": "^1.1.1",
     "postcss": "^8.5.3",
+    "preact": "^10.28.2",
     "prelude-ls": "^1.2.1",
     "proxy-from-env": "^1.1.0",
     "punycode": "^2.3.1",

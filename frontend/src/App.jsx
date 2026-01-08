@@ -1,10 +1,13 @@
 import React from 'react'
 import Provider from './Provider';
+import './App.scss';
 
 export const App = () => {
+  const state=React.useRef({count:0});
   return (
     <>
-    <div>Hello World!</div>
+    <div className="hello">Hello World!!</div>
+    <h1>{state.current.count}</h1>
     <Provider/>
     </>
   )

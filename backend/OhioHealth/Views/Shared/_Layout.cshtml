@@ -4,12 +4,19 @@
 
 @{
     var assetsBundleFile = System.IO.Path.Combine(Environment.WebRootPath, "build/assets.json");
-    string bundleJS = "";
+    string? mainJS = "";
+    string? vendorJS = "";
+    string? runtimeJS = "";
+    string? mainCSS = "";
     if (File.Exists(assetsBundleFile))
     {
         var bundleNamesJson = File.ReadAllText(assetsBundleFile);
         dynamic bundleAssetHelpers = JsonConvert.DeserializeObject(bundleNamesJson);
-        bundleJS = bundleAssetHelpers.main; // "main" matches your webpack entry
+        mainJS = bundleAssetHelpers?["main.js"];
+        mainCSS = bundleAssetHelpers?["main.css"];
+        vendorJS = bundleAssetHelpers?["vendors.js"];
+        runtimeJS = bundleAssetHelpers?["runtime.js"];
+
     }
 }
 <!DOCTYPE html>
@@ -18,8 +25,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OhioHealth</title>
+
+    <link rel="stylesheet" href="@mainCSS" asp-append-version="true" />
        @* Render the JS bundle *@
-    <script src="@bundleJS"></script>
+    <script src="@mainJS" asp-append-version="true"></script>
+    <script src="@vendorJS" asp-append-version="true"></script>
+    <script src="@runtimeJS" asp-append-version="true"></script>
 </head>
 <body>
     <div class="container">

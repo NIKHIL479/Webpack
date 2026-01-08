@@ -1,6 +1,6 @@
 const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-// Check if we are in production mode
 const isProduction = process.env.NODE_ENV === "production";
 
 module.exports = async () => {
@@ -11,28 +11,59 @@ module.exports = async () => {
     entry: "./src/index.js",
     output: {
       path: path.resolve(__dirname, "../backend/OhioHealth/wwwroot/build"),
-      filename: "bundle.[contenthash].js",
-      clean: true, // clears old files before build
+      filename: "[name].[contenthash].js", // main JS bundle
+      clean: true,
     },
     module: {
       rules: [
-        { test: /\.(js|jsx)$/, exclude: /node_modules/, use: "babel-loader" },
-        { test: /\.css$/i, use: ["style-loader", "css-loader"] },
+        {
+          test: /\.(js|jsx)$/,
+          exclude: /node_modules/,
+          use: "babel-loader",
+        },
+        {
+          test: /\.(css|scss|sass)$/i,
+          use: [
+             MiniCssExtractPlugin.loader,
+            "css-loader",     
+          ],
+        },
       ],
     },
     resolve: { extensions: [".js", ".jsx"] },
     devtool: isProduction ? false : "source-map",
+    optimization: {
+      splitChunks: {
+        chunks: "all",
+        minSize: Infinity,
+        cacheGroups: {
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: "vendors",
+            chunks: "all",
+            enforce: true,
+          },
+        },
+      },
+      runtimeChunk: {
+        name: "runtime",
+      },
+    },
     plugins: [
-       new WebpackManifestPlugin({
+      new MiniCssExtractPlugin({
+        filename: "[name].[contenthash].css", // separate CSS file
+      }),
+      new WebpackManifestPlugin({
         fileName: "assets.json",
         publicPath: "/build/",
-        filter: (file) => !file.path.endsWith(".map"), // skip .map files
-        generate: (seed, files) => {
+        filter: (file) => !file.path.endsWith(".map"),
+    generate: (seed, files) => {
           const manifest = {};
-          files.forEach(file => {
-            // remove extension from key
-            const nameWithoutExt = path.basename(file.name, path.extname(file.name));
-            manifest[nameWithoutExt] = file.path;
+          files.forEach((file) => {
+            if (!file.path.endsWith(".map")) {
+             
+              manifest[file.name] = file.path;
+            }
           });
           return manifest;
         }

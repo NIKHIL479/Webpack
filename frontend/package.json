@@ -159,22 +159,33 @@
     "webpack-cli": "^6.0.1",
     "webpack-manifest-plugin": "^6.0.1"
   },
-"jest": {
-  "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
-  "testEnvironment": "jest-environment-jsdom",
-  "moduleFileExtensions": ["js", "jsx"],
-  "testMatch": ["**/src/**/*.test.{js,jsx}"],
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "testEnvironment": "jest-environment-jsdom",
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "testMatch": [
+      "**/src/**/*.test.{js,jsx}"
+    ],
     "moduleNameMapper": {
-    "\\.(css|scss|sass)$": "identity-obj-proxy"
-  },
- 
-  "collectCoverageFrom": ["src/**/*.{js,jsx}", "!src/**/*.test.{js,jsx}"],
-  "coverageDirectory": "<rootDir>/coverage",
-  "coverageReporters": ["text", "lcov"],
-  "globals": {
-    "TEST_BASE_URL": "http://localhost"
-  },
-  "verbose": true
-}
- 
+      "\\.(css|scss|sass)$": "identity-obj-proxy"
+    },
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/**/*.test.{js,jsx}"
+    ],
+    "coverageDirectory": "<rootDir>/coverage",
+    "coverageReporters": [
+      "text",
+      "lcov"
+    ],
+    "globals": {
+      "TEST_BASE_URL": "http://localhost"
+    },
+    "verbose": true
+  }
 }

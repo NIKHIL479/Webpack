@@ -26,6 +26,9 @@ jobs:
       - uses: actions/checkout@v4
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo "Hello, world! ${{vars.PROJECT_NAME}}"
+      - name: Run script
+        env:
+          msg: hello
+        run: echo "$msg, world! ${{ vars.PROJECT_NAME }}"
+         
 

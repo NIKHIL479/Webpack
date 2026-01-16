@@ -25,10 +25,15 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
+
+      #https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#github-context  this is github context vaiables
+
       # Runs a single command using the runners shell
       - name: Run script
         env:
           msg: hello
-        run: echo "$msg, world! ${{ vars.PROJECT_NAME }}"
+        run: |
+         echo "$msg, world! ${{ vars.PROJECT_NAME }}"
+         echo "$msg, world! ${{ github.repository}}"
          
 

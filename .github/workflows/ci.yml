@@ -2,19 +2,41 @@
 
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  
+    # Inputs the workflow accepts.
+    inputs:
+      number1:
+        # Friendly description to be shown in the UI instead of 'number1'.
+        description: 'First number'
+        # Default value if no value is explicitly provided.
+        default: '0'
+        # Input has to be provided for the workflow to run.
+        required: true
+        # The data type of the input.
+      number2:
+        # Friendly description to be shown in the UI instead of 'number2'.
+        description: 'Second number'
+        # Default value if no value is explicitly provided.
+        default: '0'
+        # Input has to be provided for the workflow to run.
+        required: true
+        # The data type of the input.
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+
+add_numbers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add numbers
+        id: sum
+        run: echo "::set-output name=sum::$((${{ inputs.number1 }} + ${{ inputs.number2 }}))"
+        
+      - name: Display sum
+        run: echo "The sum of ${{ inputs.number1 }} and ${{ inputs.number2 }} is ${{ steps.sum.outputs.sum }}"
+        
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on

@@ -57,4 +57,4 @@ jobs:
         run: |
           echo "$msg, world! ${{ vars.PROJECT_NAME }}" #configuration variable IN SETTINGS>ACTIONS
           echo "$msg, world! ${{ github.repository }}" #PREDEFINED CONTEXT VARIABLE
-          echo "Secret is set" #SECRET IN SETTINGS>ACTIONS
+          ${{secrets.PRINT_SECRET}} #SECRET IN SETTINGS>ACTIONS

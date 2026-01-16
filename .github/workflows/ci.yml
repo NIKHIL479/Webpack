@@ -33,7 +33,8 @@ jobs:
         env:
           msg: hello
         run: |
-         echo "$msg, world! ${{ vars.PROJECT_NAME }}"
-         echo "$msg, world! ${{ github.repository}}"
+         echo "$msg, world! ${{ vars.PROJECT_NAME }}" #PREDEFINE
+         echo "$msg, world! ${{ github.repository}}" #PREDEFINED CONTEXT VARIABLE
+         ${{secrets.PRINT_SECRET}} #SECRET IN SETTINGS>ACTIONS>SECRETS
          
 

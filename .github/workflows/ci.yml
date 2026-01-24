@@ -3,7 +3,7 @@
 name: CI
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: #manual trigger
     # Inputs the workflow accepts.
     inputs:
       number1:

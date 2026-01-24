@@ -8,7 +8,9 @@ export const App = () => {
     <>
     <div className="hello">Hello World!!</div>
     <h1>{state.current.count}</h1>
-    <Provider/>
+    <h2>sjhgdjk</h2>
+    <h3>fdf</h3>
+\
     </>
   )
 }

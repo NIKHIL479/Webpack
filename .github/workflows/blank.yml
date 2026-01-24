@@ -1,0 +1,60 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Practice
+
+on:
+  workflow_dispatch: #manual trigger
+    # Inputs the workflow accepts.
+    inputs:
+      number1:
+        # Friendly description to be shown in the UI instead of 'number1'.
+        description: 'First number'
+        # Default value if no value is explicitly provided.
+        default: '0'
+        # Input has to be provided for the workflow to run.
+        required: true
+        # The data type of the input.
+      number2:
+        # Friendly description to be shown in the UI instead of 'number2'.
+        description: 'Second number'
+        # Default value if no value is explicitly provided.
+        default: '0'
+        # Input has to be provided for the workflow to run.
+        required: true
+        # The data type of the input.
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  add_numbers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add numbers
+        id: sum
+        run: |
+          echo "sum=$((${{ inputs.number1 }} + ${{ inputs.number2 }}))" >> $GITHUB_OUTPUT
+        
+      - name: Display sum
+        run: echo "The sum of ${{ inputs.number1 }} and ${{ inputs.number2 }} is ${{ steps.sum.outputs.sum }}"
+        
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      #https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#github-context  this is github context vaiables
+
+      # Runs a single command using the runners shell
+      - name: Run script
+        env:
+          msg: hello
+        run: |
+          echo "$msg, world! ${{ vars.PROJECT_NAME }}" #configuration variable IN SETTINGS>ACTIONS
+          echo "$msg, world! ${{ github.repository }}" #PREDEFINED CONTEXT VARIABLE
+          ${{secrets.PRINT_SECRET}} #SECRET IN SETTINGS>ACTIONS

@@ -61,7 +61,5 @@ jobs:
           Import-Module WebAdministration
           Start-WebAppPool -Name "rough"
 
-      # ---------------- OPTIONAL: Restart IIS ----------------
-      - name: Restart IIS
-        run: iisreset
+
 

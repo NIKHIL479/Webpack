@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted     # Use self-hosted for your laptop
+    runs-on: windows-latest     # Use self-hosted for your laptop
     defaults:
       run:
         shell: pwsh

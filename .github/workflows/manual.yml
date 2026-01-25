@@ -58,9 +58,19 @@ jobs:
 
       # ---------------- 6️⃣ Copy files to IIS preserving web.config ----------------
       - name: Deploy to IIS
+        shell: powershell
         run: |
           robocopy "C:\inetpub\webpack" "C:\inetpub\wwwroot" /E /XF web.config /MT:16
-          Write-Host "Robocopy Exit Code: $LASTEXITCODE"
+          $rc = $LASTEXITCODE
+          Write-Host "Robocopy Exit Code: $rc"
+      
+          if ($rc -ge 8) {
+              Write-Host "Robocopy failed with exit code $rc"
+              exit 1
+          } else {
+              Write-Host "Robocopy completed successfully (exit code $rc)"
+              exit 0
+          }
 
 
 

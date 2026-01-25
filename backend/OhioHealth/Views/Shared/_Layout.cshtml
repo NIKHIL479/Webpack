@@ -2,6 +2,7 @@
 @using Newtonsoft.Json //download Newtonsoft.Json via NuGet
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Environment
 
+@inject IConfiguration Configuration
 @{
     var assetsBundleFile = System.IO.Path.Combine(Environment.WebRootPath, "build/assets.json");
     string? mainJS = "";
@@ -37,7 +38,9 @@
         <main role="main" class="pb-3">
             <h1>Text from layout.cshtml</h1>
             <h1>@Environment.EnvironmentName</h1>
+           
 
+            <h2>@Configuration["EnvironmentCheck"]</h2>
             @RenderBody()
         </main>
     </div>

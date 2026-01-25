@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: windows-latest   # Use self-hosted for your laptop
+    runs-on: self-hosted     # Use self-hosted for your laptop
     defaults:
       run:
         shell: pwsh
@@ -42,15 +42,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore backend
-        working-directory: backend
-        run: dotnet restore
+      - name: Restore and publish backend
+        run: |
+           cd backend
+           cd OhioHealth
+           dotnet restore
+           dotnet publish ./OhioHealth.csproj -c Release -o "C:\inetpub\wwwroot"
 
-      - name: Build backend
-        working-directory: backend
-        run: dotnet build -c Release --no-restore
-
-      - name: Publish backend to IIS root
-        working-directory: backend
-        run: dotnet publish -c Release -o "C:\inetpub\wwwroot"
 

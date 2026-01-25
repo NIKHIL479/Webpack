@@ -1,4 +1,4 @@
-name: Manual Deploy to IIS (Safe)
+name: Manual Deploy to IIS (Local Laptop)
 
 on:
   workflow_dispatch:
@@ -16,13 +16,14 @@ jobs:
         shell: powershell
 
     steps:
-      # 1️⃣ Checkout
+      # ---------------- 1️⃣ Checkout ----------------
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.branch }}
+          fetch-depth: 0
 
-      # ---------------- FRONTEND ----------------
+      # ---------------- 2️⃣ Frontend ----------------
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -36,35 +37,38 @@ jobs:
         working-directory: frontend
         run: npm run webpack
 
-      # ---------------- BACKEND ----------------
-      - name: Setup .NET
+      # ---------------- 3️⃣ Backend ----------------
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      # 2️⃣ Publish to TEMP folder
-      - name: Publish backend to temp
-        working-directory: backend/OhioHealth
-        run: |
-          dotnet restore
-          dotnet publish ./OhioHealth.csproj `
-            -c Release `
-            -o "C:\inetpub\webpack"
-
-      # 3️⃣ Stop IIS App Pool
+      # ---------------- 4️⃣ Stop IIS App Pool ----------------
       - name: Stop IIS App Pool
         run: |
           Import-Module WebAdministration
           Stop-WebAppPool -Name "rough"
 
-      # 4️⃣ Copy files (EXCEPT web.config)
-      - name: Copy files to IIS (preserve web.config)
+      # ---------------- 5️⃣ Publish backend to temp folder ----------------
+      - name: Restore and publish backend to temp folder
+        working-directory: backend/OhioHealth
         run: |
-          robocopy "C:\inetpub\webpack" "C:\inetpub\wwwroot" /E /XF web.config
+          dotnet restore
+          dotnet publish ./OhioHealth.csproj -c Release -o "C:\inetpub\webpack"
+
+      # ---------------- 6️⃣ Copy files to IIS preserving web.config ----------------
+      - name: Deploy to IIS
+        run: |
+          robocopy "C:\inetpub\webpack" "C:\inetpub\wwwroot" /E /XF web.config /MT:16
+          Write-Host "Robocopy Exit Code: $LASTEXITCODE"
           if ($LASTEXITCODE -ge 8) { exit 1 }
 
-      # 5️⃣ Start IIS App Pool
+      # ---------------- 7️⃣ Start IIS App Pool ----------------
       - name: Start IIS App Pool
         run: |
           Import-Module WebAdministration
           Start-WebAppPool -Name "rough"
+
+      # ---------------- 8️⃣ Optional: Restart IIS ----------------
+      - name: Restart IIS (Optional)
+        run: iisreset

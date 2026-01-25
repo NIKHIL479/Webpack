@@ -43,11 +43,21 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      # ---------------- 4️⃣ Stop IIS App Pool ----------------
+      # ---------------- 4️⃣ Stop IIS App Pool (only if running) ----------------
       - name: Stop IIS App Pool
+        shell: powershell
         run: |
           Import-Module WebAdministration
-          Stop-WebAppPool -Name "rough"
+          $appPool = Get-WebAppPoolState -Name "rough"
+          Write-Host "App Pool 'rough' current state: $($appPool.Value)"
+      
+          if ($appPool.Value -eq "Started") {
+              Write-Host "Stopping App Pool 'rough'..."
+              Stop-WebAppPool -Name "rough"
+          } else {
+              Write-Host "App Pool 'rough' is not running. Skipping stop."
+          }
+
 
       # ---------------- 5️⃣ Publish backend to temp folder ----------------
       - name: Restore and publish backend to temp folder

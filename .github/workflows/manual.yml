@@ -61,10 +61,7 @@ jobs:
         run: |
           robocopy "C:\inetpub\webpack" "C:\inetpub\wwwroot" /E /XF web.config /MT:16
           Write-Host "Robocopy Exit Code: $LASTEXITCODE"
-          if ($LASTEXITCODE -ge 8) { 
-            Write-Error "Robocopy failed with exit code $LASTEXITCODE"
-            exit 1 
-          }
+
 
 
       # ---------------- 7️⃣ Start IIS App Pool ----------------

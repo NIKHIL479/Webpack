@@ -1,4 +1,4 @@
-name: Manual Deploy to IIS (Local Laptop)
+name: Manual Deploy to IIS (Safe)
 
 on:
   workflow_dispatch:
@@ -16,12 +16,11 @@ jobs:
         shell: powershell
 
     steps:
-      # 1️⃣ Checkout selected branch
+      # 1️⃣ Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.branch }}
-          fetch-depth: 0   # Ensure all branches are available
 
       # ---------------- FRONTEND ----------------
       - name: Setup Node.js
@@ -38,28 +37,34 @@ jobs:
         run: npm run webpack
 
       # ---------------- BACKEND ----------------
-      - name: Setup .NET 8
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      # ---------------- STOP IIS APP POOL ----------------
+      # 2️⃣ Publish to TEMP folder
+      - name: Publish backend to temp
+        working-directory: backend/OhioHealth
+        run: |
+          dotnet restore
+          dotnet publish ./OhioHealth.csproj `
+            -c Release `
+            -o "C:\inetpub\webpack"
+
+      # 3️⃣ Stop IIS App Pool
       - name: Stop IIS App Pool
         run: |
           Import-Module WebAdministration
           Stop-WebAppPool -Name "rough"
 
-      - name: Restore and publish backend
-        working-directory: backend/OhioHealth
+      # 4️⃣ Copy files (EXCEPT web.config)
+      - name: Copy files to IIS (preserve web.config)
         run: |
-          dotnet restore
-          dotnet publish ./OhioHealth.csproj -c Release -o "C:\inetpub\wwwroot"
-          
-      # ---------------- START IIS APP POOL ----------------
+          robocopy "C:\deploy\OhioHealth" "C:\inetpub\wwwroot" /E /XF web.config
+          if ($LASTEXITCODE -ge 8) { exit 1 }
+
+      # 5️⃣ Start IIS App Pool
       - name: Start IIS App Pool
         run: |
           Import-Module WebAdministration
           Start-WebAppPool -Name "rough"
-
-
-

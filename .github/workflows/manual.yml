@@ -54,9 +54,14 @@ jobs:
         run: |
           dotnet restore
           dotnet publish ./OhioHealth.csproj -c Release -o "C:\inetpub\wwwroot"
-
+          
       # ---------------- START IIS APP POOL ----------------
       - name: Start IIS App Pool
         run: |
           Import-Module WebAdministration
-          Start-WebAppPool -Name "OhioHealthAppPool"
+          Start-WebAppPool -Name "rough"
+
+      # ---------------- OPTIONAL: Restart IIS ----------------
+      - name: Restart IIS
+        run: iisreset
+

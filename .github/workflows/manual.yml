@@ -10,12 +10,13 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted   # Use self-hosted for your laptop
+    runs-on: self-hosted   # Use your self-hosted runner
     defaults:
       run:
-        shell: pwsh
+        shell: powershell   # Use Windows PowerShell
 
     steps:
+      # 1️⃣ Checkout selected branch
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -25,7 +26,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '25.x'
+          node-version: '20.x'   # Use a valid Node version
 
       - name: Install frontend dependencies
         working-directory: frontend
@@ -34,7 +35,8 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: npm run webpack
-        # React build stays in frontend/wwwroot/build → IIS serves from C:\inetpub\wwwroot/build
+        # React build will remain in frontend/wwwroot/build
+        # IIS should serve from C:\inetpub\wwwroot\build
 
       # ---------------- BACKEND ----------------
       - name: Setup .NET 8
@@ -43,10 +45,12 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore and publish backend
+        working-directory: backend/OhioHealth
         run: |
-           cd backend
-           cd OhioHealth
-           dotnet restore
-           dotnet publish ./OhioHealth.csproj -c Release -o "C:\inetpub\wwwroot"
+          dotnet restore
+          dotnet publish ./OhioHealth.csproj -c Release -o "C:\inetpub\wwwroot"
 
-
+      # ---------------- OPTIONAL: Restart IIS ----------------
+      - name: Restart IIS
+        run: |
+          iisreset
